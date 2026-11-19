@@ -1,0 +1,623 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senegal Users | Gestion des utilisateurs</title>
+
+  <!-- React -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #080d1c;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1250px;
+      margin: auto;
+    }
+
+    /* HEADER */
+
+    header {
+      padding: 25px 0;
+      border-bottom: 1px solid #222b42;
+      background: #0c1325;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .logo span {
+      color: #19d69b;
+    }
+
+    .online {
+      background: #123b35;
+      color: #35e8b1;
+      padding: 9px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+    }
+
+    /* HERO */
+
+    .hero {
+      padding: 65px 0 40px;
+      text-align: center;
+    }
+
+    .hero small {
+      color: #24dca5;
+      letter-spacing: 3px;
+      font-weight: 600;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      margin: 18px 0;
+      font-weight: 800;
+    }
+
+    .hero h1 span {
+      color: #25dba5;
+    }
+
+    .hero p {
+      color: #9ba9c3;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    /* STATS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin: 35px 0;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #141f38, #10192c);
+      border: 1px solid #263451;
+      padding: 25px;
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .stat-card .icon {
+      font-size: 27px;
+    }
+
+    .stat-card h2 {
+      color: #29e1ac;
+      font-size: 30px;
+      margin: 8px 0;
+    }
+
+    .stat-card p {
+      color: #a6b2c9;
+      font-size: 12px;
+    }
+
+    /* SEARCH */
+
+    .search-section {
+      margin: 40px 0 25px;
+    }
+
+    .search-section h2 {
+      font-size: 21px;
+      margin-bottom: 17px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #131e34;
+      border: 1px solid #2b3b5b;
+      padding: 5px 18px;
+      border-radius: 13px;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: white;
+      padding: 15px 0;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .search-box input::placeholder {
+      color: #8390aa;
+    }
+
+    /* USERS */
+
+    .users-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+      padding-bottom: 60px;
+    }
+
+    .user-card {
+      background: linear-gradient(145deg, #17243e, #111a2e);
+      border: 1px solid #293957;
+      border-radius: 20px;
+      padding: 25px;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .user-card:hover {
+      transform: translateY(-6px);
+      border-color: #20dca4;
+      box-shadow: 0 12px 35px #0005;
+    }
+
+    .user-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar {
+      width: 65px;
+      height: 65px;
+      background: linear-gradient(135deg, #19d69b, #2674e8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 18px;
+      font-size: 23px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .user-info h3 {
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: #a4b2ca;
+      word-break: break-word;
+    }
+
+    .company {
+      display: inline-block;
+      margin-top: 20px;
+      background: #123b35;
+      color: #39e6ae;
+      padding: 8px 13px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .details {
+      border-top: 1px solid #2b3a56;
+      margin-top: 20px;
+      padding-top: 18px;
+      animation: appear 0.3s ease;
+    }
+
+    .details p {
+      color: #b5c0d4;
+      font-size: 12px;
+      margin: 11px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .details strong {
+      color: #2de3aa;
+    }
+
+    .click-info {
+      color: #29dba7;
+      font-size: 11px;
+      margin-top: 15px;
+    }
+
+    /* LOADING / ERROR */
+
+    .message {
+      text-align: center;
+      padding: 45px 15px;
+      color: #28dfaa;
+      grid-column: 1 / -1;
+    }
+
+    .error {
+      color: #ff7272;
+    }
+
+    .retry {
+      margin-top: 15px;
+      padding: 12px 25px;
+      background: #20dca4;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .empty {
+      text-align: center;
+      color: #aab7ca;
+      padding: 35px;
+      grid-column: 1 / -1;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* FOOTER */
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: #0c1325;
+      border-top: 1px solid #263451;
+      color: #8391a9;
+      font-size: 12px;
+    }
+
+    footer span {
+      color: #24dca5;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 650px) {
+      .users-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 45px;
+      }
+
+      .navbar {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    const { useState, useEffect } = React;
+
+    // Noms sénégalais
+    const senegalNames = [
+      "Malick Diouf",
+      "Amadou Fall",
+      "Fatou Ndiaye",
+      "Ibrahima Ba",
+      "Aïssatou Sow",
+      "Moussa Diallo",
+      "Mariama Sarr",
+      "Ousmane Sy",
+      "Aminata Kane",
+      "Cheikh Gueye"
+    ];
+
+    // Composant UserList
+    function UserList() {
+
+      // 1. Liste des utilisateurs
+      const [listOfUsers, setListOfUsers] = useState([]);
+
+      // 2. État de chargement
+      const [loading, setLoading] = useState(true);
+
+      // 3. État d'erreur
+      const [error, setError] = useState("");
+
+      // 4. Recherche
+      const [search, setSearch] = useState("");
+
+      // 5. Utilisateur sélectionné
+      const [selectedUser, setSelectedUser] = useState(null);
+
+      // Récupération des utilisateurs avec Axios
+      const fetchUsers = async () => {
+
+        setLoading(true);
+        setError("");
+
+        try {
+
+          const response = await axios.get(
+            "https://jsonplaceholder.typicode.com/users"
+          );
+
+          // Ajouter des noms sénégalais aux données reçues
+          const users = response.data.map((user, index) => ({
+            ...user,
+            name: senegalNames[index] || user.name
+          }));
+
+          setListOfUsers(users);
+
+        } catch (err) {
+
+          setError("Impossible de charger les utilisateurs. Vérifiez votre connexion Internet.");
+
+        } finally {
+
+          setLoading(false);
+
+        }
+      };
+
+      // useEffect : exécuter la requête au chargement
+      useEffect(() => {
+        fetchUsers();
+      }, []);
+
+      // Filtrer les utilisateurs par nom
+      const filteredUsers = listOfUsers.filter(user =>
+        user.name.toLowerCase().includes(search.toLowerCase())
+      );
+
+      // Composant principal
+      return (
+        <>
+          <header>
+            <div className="container navbar">
+              <div className="logo">
+                🇸🇳 SENEGAL<span>USERS</span>
+              </div>
+
+              <div className="online">
+                ● API CONNECTÉE
+              </div>
+            </div>
+          </header>
+
+          <main className="container">
+
+            <section className="hero">
+              <small>BIENVENUE AU SÉNÉGAL 🇸🇳</small>
+
+              <h1>
+                Gestion des <span>utilisateurs</span>
+              </h1>
+
+              <p>
+                Découvrez notre espace de gestion des utilisateurs.
+                <br />
+                Une application moderne développée avec React et Axios.
+              </p>
+            </section>
+
+            <section className="stats">
+
+              <div className="stat-card">
+                <div className="icon">👥</div>
+                <h2>{listOfUsers.length}</h2>
+                <p>Utilisateurs enregistrés</p>
+              </div>
+
+              <div className="stat-card">
+                <div className="icon">🔍</div>
+                <h2>{filteredUsers.length}</h2>
+                <p>Résultats trouvés</p>
+              </div>
+
+              <div className="stat-card">
+                <div className="icon">🌐</div>
+                <h2>API</h2>
+                <p>JSONPlaceholder</p>
+              </div>
+
+            </section>
+
+            <section className="search-section">
+              <h2>✨ Nos utilisateurs</h2>
+
+              <div className="search-box">
+                <span>🔎</span>
+
+                <input
+                  type="text"
+                  placeholder="Rechercher un utilisateur par son nom..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </section>
+
+            <section className="users-grid">
+
+              {loading && (
+                <div className="message">
+                  <h2>⏳ Loading users...</h2>
+                  <p>Chargement des utilisateurs en cours...</p>
+                </div>
+              )}
+
+              {error && (
+                <div className="message error">
+                  <h3>⚠️ Une erreur est survenue</h3>
+                  <p>{error}</p>
+
+                  <button
+                    className="retry"
+                    onClick={fetchUsers}
+                  >
+                    Réessayer
+                  </button>
+                </div>
+              )}
+
+              {!loading && !error && filteredUsers.length === 0 && (
+                <div className="empty">
+                  Aucun utilisateur trouvé 😕
+                </div>
+              )}
+
+              {!loading && !error && filteredUsers.map(user => (
+
+                <div
+                  className="user-card"
+                  key={user.id}
+                  onClick={() =>
+                    setSelectedUser(
+                      selectedUser === user.id ? null : user.id
+                    )
+                  }
+                >
+
+                  <div className="user-top">
+
+                    <div className="avatar">
+                      {user.name.split(" ").map(n => n[0]).slice(0, 2).join("")}
+                    </div>
+
+                    <div className="user-info">
+                      <h3>{user.name}</h3>
+                      <p>✉️ {user.email}</p>
+                    </div>
+
+                  </div>
+
+                  <div className="company">
+                    🏢 {user.company.name}
+                  </div>
+
+                  <p className="click-info">
+                    {selectedUser === user.id
+                      ? "▲ Masquer les détails"
+                      : "▼ Cliquer pour voir les détails"}
+                  </p>
+
+                  {selectedUser === user.id && (
+
+                    <div className="details">
+
+                      <p>
+                        <strong>📍 Adresse :</strong>
+                        {" "}{user.address.street}, {user.address.suite},
+                        {user.address.city}
+                      </p>
+
+                      <p>
+                        <strong>📮 Code postal :</strong>
+                        {" "}{user.address.zipcode}
+                      </p>
+
+                      <p>
+                        <strong>📞 Téléphone :</strong>
+                        {" "}{user.phone}
+                      </p>
+
+                      <p>
+                        <strong>🌐 Site web :</strong>
+                        {" "}{user.website}
+                      </p>
+
+                      <p>
+                        <strong>🏢 Entreprise :</strong>
+                        {" "}{user.company.name}
+                      </p>
+
+                      <p>
+                        <strong>💼 Activité :</strong>
+                        {" "}{user.company.catchPhrase}
+                      </p>
+
+                    </div>
+
+                  )}
+
+                </div>
+
+              ))}
+
+            </section>
+
+          </main>
+
+          <footer>
+            <p>
+              © 2026 <span>SENEGAL USERS</span> |
+              Développé avec ❤️ par Malick Diouf 🇸🇳
+            </p>
+          </footer>
+
+        </>
+      );
+    }
+
+    // Afficher l'application React
+    function App() {
+      return <UserList />;
+    }
+
+    const root = ReactDOM.createRoot(
+      document.getElementById("root")
+    );
+
+    root.render(<App />);
+
+  </script>
+
+</body>
+</html>
